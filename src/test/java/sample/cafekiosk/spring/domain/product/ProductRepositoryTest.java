@@ -25,30 +25,9 @@ class ProductRepositoryTest {
     @Test
     void findSellingProducts (){
         //given
-        Product product1 = Product.builder()
-                .productNumber("001")
-                .name("아메리카노")
-                .sellingStatus(SELLING)
-                .type(HANDMADE)
-                .price(4000)
-                .build();
-
-
-        Product product2 = Product.builder()
-                .productNumber("002")
-                .name("딸기케이크")
-                .sellingStatus(HOLD)
-                .type(BAKERY)
-                .price(5500)
-                .build();
-
-        Product product3 = Product.builder()
-                .productNumber("003")
-                .name("카페라떼")
-                .sellingStatus(STOP_SELLING)
-                .type(HANDMADE)
-                .price(4500)
-                .build();
+        Product product1 = createProduct("001", "아메리카노", 4000, SELLING);
+        Product product2 = createProduct("002", "딸기케이크", 5500, HOLD);
+        Product product3 = createProduct("003", "카페라뗴", 4500, STOP_SELLING);
 
         productRepository.saveAll(List.of(product1, product2, product3));
         //when
@@ -60,6 +39,37 @@ class ProductRepositoryTest {
                         tuple("001", "아메리카노", 4000),
                         tuple("002", "딸기케이크", 5500)
                 );
-
     }
+
+    @DisplayName("상품번호 리스트로 상품을 조회한다.")
+    @Test
+    void findAllByProductNumberIn (){
+        //given
+        Product product1 = createProduct("001", "아메리카노", 4000, SELLING);
+        Product product2 = createProduct("002", "딸기케이크", 5500, HOLD);
+        Product product3 = createProduct("003", "카페라뗴", 4500, STOP_SELLING);
+
+        productRepository.saveAll(List.of(product1, product2, product3));
+        //when
+        List<Product> products = productRepository.findAllByProductNumberIn(List.of("001","002"));
+        //then
+        assertThat(products).hasSize(2)
+                .extracting("productNumber", "name", "price")
+                .containsExactlyInAnyOrder(
+                        tuple("001", "아메리카노", 4000),
+                        tuple("002", "딸기케이크", 5500)
+                );
+    }
+
+    private Product createProduct(String productNumber, String name, int price, ProductSellingStatus status) {
+        return Product.builder()
+                .productNumber(productNumber)
+                .name(name)
+                .sellingStatus(status)
+                .type(HANDMADE)
+                .price(price)
+                .build();
+    }
+
+
 }
