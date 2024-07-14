@@ -49,6 +49,26 @@ class OrderTest {
 
     }
 
+    @DisplayName("주문 생성 시 주문 등록 시간을 기록한다.")
+    @Test
+    void registeredDateTime(){
+        //given
+        LocalDateTime registeredDateTime = LocalDateTime.now();
+        Product product1 = createProduct("001",  ProductType.HANDMADE, ProductSellingStatus.SELLING, "아메리카노", 4000);
+        Product product2 = createProduct("002",  ProductType.HANDMADE, ProductSellingStatus.HOLD, "카페라떼", 5000);
+        Product product3 = createProduct("003",  ProductType.HANDMADE, ProductSellingStatus.STOP_SELLING, "토마토주스", 6000);
+
+        List<Product> products = List.of(product1, product2, product3);
+        //when
+        Order order = Order.create(products, registeredDateTime);
+
+        //then
+        assertThat(order.getRegisteredDateTime()).isEqualTo(registeredDateTime);
+
+    }
+
+
+
     private Product createProduct(String productNumber, ProductType type, ProductSellingStatus sellingStatus, String name, int price) {
         return new Product(productNumber, type, sellingStatus, name, price);
     }

@@ -9,6 +9,7 @@ import sample.cafekiosk.spring.domain.product.Product;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,7 @@ public class Order extends BaseEntity {
     private int totalPrice;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<OrderProduct> orderProducts;
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
     public Order(List<Product> products, LocalDateTime registeredDateTime) {
         this.orderStatus = INIT;

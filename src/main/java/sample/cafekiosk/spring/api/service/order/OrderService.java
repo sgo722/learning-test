@@ -21,16 +21,12 @@ public class OrderService {
 
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
-    private final OrderProductRepository orderProductRepository;
 
     public OrderCreateResponse createOrder(OrderCreateRequest request, LocalDateTime registeredDateTime){
         List<String> productNumbers = request.getProductNumbers();
         List<Product> products = productRepository.findAllByProductNumberIn(productNumbers);
+
         Order order = Order.create(products, registeredDateTime);
-        List<OrderProduct> orderProducts = products.stream()
-                .map(product -> new OrderProduct(order, product))
-                .collect(Collectors.toList());
-        orderProductRepository.saveAll(orderProducts);
         Order savedOrder = orderRepository.save(order);
         return OrderCreateResponse.of(savedOrder);
 

@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static sample.cafekiosk.spring.domain.product.ProductSellingStatus.SELLING;
 
 @ActiveProfiles("test")
-@Transactional
 @SpringBootTest
 class OrderServiceTest {
 
